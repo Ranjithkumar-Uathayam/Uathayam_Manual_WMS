@@ -1,0 +1,551 @@
+/* .table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    max-height: calc(90vh - 140px);
+    min-height: calc(88vh - 140px);
+    display: flex;
+    flex-direction: column;
+
+} */
+
+.table_head_font {
+    font-size: 2vh !important;
+    height: 4vh !important;
+    max-height: 4vh !important;
+    vertical-align: middle !important;
+}
+
+.table_data_font {
+    /* font-size: 1.8vh !important; */
+    font-size: 1.9vh !important;
+    padding: 1.2vh 1.2vh !important;
+    height: 4vh !important;
+    max-height: 4vh !important;
+    vertical-align: middle !important;
+}
+
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    /* max-height: calc(90vh - 179px); */
+    /* min-height: calc(80vh - 120px); */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Add position relative */
+}
+
+@media (max-width: 1024px) {
+    .table-container {
+        /* min-height: calc(88vh - 150px); */
+    }
+
+    .gk-page {
+        /* height: 94%; */
+    }
+}
+
+/* Add styles for the No Records Found message */
+.no-records-message {
+    position: absolute;
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Center precisely */
+}
+
+
+table {
+    width: 100%;
+}
+
+th,
+td {
+    white-space: nowrap;
+}
+
+.no-wrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fixed-header th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.fixed-header th,
+.fixed-header td {
+    padding: 1vh !important;
+}
+
+.col-sno {
+    min-width: 50px;
+}
+
+.col-action {
+    min-width: 100px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0px;
+    right: 0;
+    height: 100%;
+    width: 25%;
+    background: #e6e6e6;
+    z-index: 100;
+    transition: all 0.5s ease;
+    border-left: 2px solid #018DB0;
+    border-bottom: 2px solid #018DB0;
+}
+
+.sidebar.close {
+    width: 0px;
+}
+
+.br-6 {
+    border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #326789 !important;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+}
+
+.table-container {
+    overflow-x: auto !important;
+}
+
+.page_height {
+    background-color: white;
+    /* min-height: calc(100vh - 182px);  */
+    /* height: 81vh; */
+    width: 100%;
+    margin-left: 0px !important;
+    border-radius: 6px;
+}
+
+.filter-input {
+    width: 100%;
+    height: 100% !important;
+    box-sizing: border-box;
+    /* padding: 8px; */
+    border-radius: 20px;
+    outline: none;
+    max-height: 4vh !important;
+}
+
+.filter-input ::placeholder {
+    font-size: 1.8vh !important;
+}
+
+.filter-input::-webkit-input-placeholder {
+    font-size: 1.8vh !important;
+}
+
+.filter-input::-moz-placeholder {
+    font-size: 1.8vh !important;
+}
+
+.filter-input:-ms-input-placeholder {
+    font-size: 1.8vh !important;
+}
+
+.filter-input::placeholder {
+    font-size: 1.8vh !important;
+}
+
+
+
+.button-content i {
+    font-style: normal;
+}
+
+* {
+    font-variant: small-caps !important;
+}
+
+.total_records {
+    font-size: 1.9vh !important;
+    color: #018DB0;
+}
+
+
+.ngx-pagination .current {
+    padding: 0.1875rem 0.625rem;
+    background: #018DB0 !important;
+    color: #fefefe;
+    cursor: default;
+    /* font-size: 1rem; */
+}
+
+
+:host /deep/ .ngx-pagination {
+    padding-left: 0px;
+    /* font-size: 1rem; */
+}
+
+:host /deep/ .ngx-pagination .current,
+:host /deep/ .btn-info {
+    background: #17a2b8 !important;
+    border: transparent;
+    border-radius: 6px;
+    /* font-size: 1rem; */
+}
+
+:host /deep/ .ngx-pagination .current:hover {
+    background: #17a2b8 !important;
+    border-radius: 6px;
+    border: transparent;
+    /* font-size: 1rem; */
+}
+
+.custom-modal-backdrop {
+    z-index: 1000 !important;
+    /* Adjust the z-index as needed */
+}
+
+::ng-deep .modal-backdrop {
+    z-index: 1000 !important;
+}
+
+/* ================================ */
+.checkbox input[type="checkbox"] {
+    visibility: hidden;
+    display: none;
+}
+
+.checkbox .toggle {
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0, 0, 0);
+}
+
+label {
+    font-weight: bold;
+    color: #018DB0;
+}
+
+.toggle {
+    margin-bottom: 0px !important;
+}
+
+.td-action {
+    display: flex;
+    column-gap: 10px;
+    justify-content: center;
+}
+
+.checkbox .toggle:before {
+    content: "";
+    position: relative;
+    top: 3px;
+    left: 3px;
+    width: 34px;
+    /* height: 14px; */
+    display: block;
+    background: #9a9999;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.checkbox .toggle span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    /* height: 20px; */
+    display: block;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(154, 153, 153, 0.5);
+    transition: all 0.2s ease;
+}
+
+.checkbox .toggle span:before {
+    content: "";
+    position: absolute;
+    display: block;
+    margin: -18px;
+    width: 56px;
+    /* height: 56px; */
+    background: rgba(79, 46, 220, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 1;
+    pointer-events: none;
+}
+
+.checkbox .cbx:checked+.toggle:before {
+    background: #a6e6f7;
+}
+
+.checkbox .cbx:checked+.toggle span {
+    background: #326789;
+    transform: translateX(20px);
+    transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+    box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+}
+
+.checkbox .cbx:checked+.toggle span:before {
+    transform: scale(1);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+
+.button {
+    position: relative;
+    overflow: hidden;
+    /* height: 44px; */
+    padding: 0px 20px;
+    border-radius: 30px;
+    background: #018DB0;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover::before {
+    transform: scaleX(1);
+}
+
+.button-content {
+    position: relative;
+    z-index: 1;
+    font-variant: small-caps;
+    /* font-size: 18px; */
+    font-weight: 600;
+    /* line-height: 20px; */
+}
+
+.button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    width: 100%;
+    /* height: inherit; */
+    border-radius: inherit;
+    background-color: #326789;
+    transition: all 0.8s;
+}
+
+.button-content .fa {
+    color: white !important;
+}
+
+.button-content i {
+    font-style: normal;
+}
+
+.btns_sidebar {
+    column-gap: 14px;
+}
+
+.btn-info {
+    width: 6vw !important;
+    border-radius: 30px !important;
+}
+
+/* .modal_table {
+    height: 80vh !important
+} */
+
+.modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #aaa5a5 !important;
+}
+
+.modal-dialog {
+    max-width: 100% !important;
+    margin: 2rem 1rem 1rem 1rem !important;
+    /* height: 95vh !important; */
+    /* max-height: 100vh !important */
+}
+
+
+.custom-modal-backdrop {
+    z-index: 1000 !important;
+}
+
+::ng-deep .modal-backdrop {
+    z-index: 1000 !important;
+}
+
+
+/* export btn fn */
+
+.export-container {
+    position: fixed;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.export-button {
+    /* background-color: #007bff; */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 0px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu {
+
+    display: flex;
+    /* Initially show to enable transitions */
+    opacity: 0;
+    flex-direction: row;
+    top: calc(-100% - 10px);
+    position: absolute;
+    bottom: 60px;
+    /* Position the dropdown above the export button */
+    left: 86%;
+    transform: translateX(-50%);
+    transition: opacity 0.4s ease, visibility 0.4s;
+    visibility: hidden;
+    /* Hidden initially */
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    background: none;
+    border: none;
+}
+
+.dropdown-menu button {
+    /* background-color: white;  */
+    border: transparent;
+    padding: 0px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-menu button:hover {
+    color: white;
+}
+
+@media (max-width: 1366px) {
+    .export-container {
+        bottom: 10px;
+    }
+
+    .dropdown-menu {
+        bottom: 50px;
+        /* Adjust accordingly for smaller screens */
+    }
+
+}
+
+.gk-section {
+    height: 80vh !important;
+}
+
+.gk-container {
+    padding: 0.8vh 0.5vw !important;
+    width: 99% !important;
+}
+
+.gk-container2{
+    /* padding: 0.8vh 0.5vw !important; */
+    background-color: white !important;
+    /* border-radius: 0.5rem !important; */
+    /* min-height: 81vh !important; */
+    height: 74vh !important;
+    /* overflow-y: scroll; */
+}
+
+/* .gk-container {
+    height: 100%;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    padding-bottom: 10px !important;
+    margin: 0px !important;
+} */
+
+/* .gk-page{
+    height: 100%;
+} */
+
+.gk-table-container {
+    min-height: 70vh !important;
+}
+
+.gk-h100p {
+    /* height: 100%; */
+}
+
+.gk-container
+{
+    border-radius: 0.5rem !important;
+}
+ 
+
+
+@media (max-width: 1024px) {
+    .gk-container2{
+        height: 74vh !important;
+        /* overflow-y: scroll; */
+    }
+    .table_data_font
+      {
+        padding: 1vh 2vh !important;
+      }
+      
+}
+ 
+
+.gk-container2::-webkit-scrollbar {
+    height: 8px;
+    width: 8px !important;
+}
+
+.gk-container2::-webkit-scrollbar-thumb {
+    background-color: #326789 !important;
+}
+
+.gk-container2::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
+}
+
+
+.fixed-header {
+    position: sticky;
+    top: 0; 
+    z-index: 10;
+  }
+
+  .table-container {
+    position: relative;
+    max-height: 400px;  
+    overflow-y: auto;
+  }

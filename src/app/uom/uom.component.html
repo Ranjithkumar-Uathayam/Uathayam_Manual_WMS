@@ -1,0 +1,200 @@
+<section class="gk-section">
+  <div class="container-fluid gk-container mt-2 bg-white"> 
+    <div class="row gk-container2 m-0"> 
+      <div class="col-12 px-0">
+        <div class="table-container d-grid gk-table-container"
+          [ngStyle]="{ 'border': filteredArray.length == 0 ? '2px solid #dee2e6' : 'none' }">
+          <table class="table table-bordered table-striped part_table">
+            <thead class="fixed-header" #tableBody>
+              <tr style="width: 100%;">
+                <th *ngIf="tableData.length > 0" class="col-sno table_head_font" [style.width.px]="getColumnWidth('S.No')">S.No</th>
+                
+                <th class="table_head_font setPointer " *ngFor="let item of tableHeader" [style.width.px]="getColumnWidth(item)" (click)="onSort(item.data, item.type)">
+                  {{ item.header }}   
+                    <i *ngIf="currentSortKey === item.data && isAscending" class="fas fa-arrow-up"></i>  
+                    <i *ngIf="currentSortKey === item.data && !isAscending" class="fas fa-arrow-down"></i>  
+                    <i *ngIf="currentSortKey !== item.data" class="fas fa-sort"></i>  
+                </th>
+                
+                <th
+                  *ngIf="(tableData.length > 0) && ((activatedPage == 'masterBin' && (btnRights?.master_Bin_modifies || btnRights?.master_Bin_deletes)) || (activatedPage == 'MasterReason' && (btnRights?.master_reason_modifies || btnRights?.master_reason_deletes)))"
+                  class="col-action table_head_font" 
+                  [style.width.px]="getColumnWidth('Action')">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <tr style="width: 100%;" *ngIf="tableData.length > 0 || filters">
+                <td class="table_data_font"></td>
+                <td class="table_data_font" class="p-0" *ngFor="let item of tableHeader">
+                  <input *ngIf="item.search == true" type="search" class="filter-input" placeholder="search"
+                    [(ngModel)]="filters[item.data]" (input)="applyFilters()">
+                </td>
+                <td class="table_data_font"
+                  *ngIf="(activatedPage == 'masterBin' && btnRights?.master_Bin_modifies == true || btnRights?.master_Bin_deletes == true)|| (activatedPage == 'MasterReason' && btnRights?.master_reason_modifies == true || btnRights?.master_reason_deletes == true)">
+                </td>
+              </tr>
+              <tr style="width: 100%;"
+                *ngFor="let item of filteredArray | paginate: { itemsPerPage: itemsPerPage, currentPage: p };let i = index;">
+                <td class="col-sno table_data_font" [style.width.px]="getColumnWidth('S.No')">{{item.sno}}</td>
+                <td class="table_data_font" *ngFor="let elem of tableHeader">
+                  <span *ngIf="elem.date == false">{{item[elem.data]}}</span>
+                  <span *ngIf="elem.date == true">{{item[elem.data] | date : 'dd/MM/yyyy hh:mm a'}}</span>
+                </td>
+
+                <td class="py-2 table_data_font"
+                  *ngIf="(activatedPage == 'masterBin' && btnRights?.master_Bin_modifies == true || btnRights?.master_Bin_deletes == true) || (activatedPage == 'MasterReason' && btnRights?.master_reason_modifies == true || btnRights?.master_reason_deletes == true)">
+                  <div class="td-action">
+                    <i *ngIf="(activatedPage == 'masterBin' && btnRights?.master_Bin_modifies == true) || (activatedPage == 'MasterReason' && btnRights?.master_reason_modifies == true)"
+                      (click)="open(item,activatedPage)" class='fa fa-edit pointer' aria-hidden="true"></i>
+                    <div
+                      *ngIf="(activatedPage == 'masterBin' && btnRights?.master_Bin_deletes == true) || (activatedPage == 'MasterReason' && btnRights?.master_reason_deletes == true)"
+                      class="checkbox ml-4">
+                      <input id="cbx{{item.Id??item.id}}" class="cbx" type="checkbox"
+                        (click)="activeInactive(item,item.Status)" [checked]="item.Status">
+                      <label class="toggle" for="cbx{{item.Id??item.id}}"><span></span></label>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="no-records-message" *ngIf="filteredArray.length == 0">
+            <div>
+              <p>No Records Found</p>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="col-12 d-flex">
+      <div class="col-2 justify-content-start align-items-center d-flex pl-0"
+        style="height: 5vh;display: flex;justify-content: start;align-items: center;">
+        <p class="mb-0 total_records">
+          Records : <span>{{filteredArray.length}}</span>
+        </p>
+      </div>
+
+      <div class="col-5 justify-content-end align-items-center d-flex"
+        style="height: 5vh;display: flex;justify-content: start;align-items: center;">
+
+        <div
+          *ngIf="(btnRights?.master_Bin_creates || btnRights?.master_reason_creates) && (activatedPage == 'masterBin' || activatedPage == 'MasterReason')"
+          style="display: flex;justify-content: start;align-items: center;">
+          <button class="button btn-new" (click)="openSidebar('')">
+            <span class="button-content"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>New</span>
+          </button>
+        </div>
+
+        <button *ngIf="btnRights?.master_item_exports" class="ml-5 export-button btn btn-main button d-flex align-items-center justify-content-center ml-0" (click)="toggleDropdown()" (click)="exportFile()">
+          <span class="button-content d-flex">
+            <i class="fa fa-download mr-1" aria-hidden="true"></i> Export</span>
+          </button>
+
+        <div class="dropdown-menu ml-5" [class.show]="dropdownOpen">
+                  
+          <button type="button" (click)="export('pdf')" class="btn button d-flex align-items-center justify-content-center"><span class="button-content">Pdf</span></button>
+          <button type="button" (click)="export('csv')" class="btn button d-flex align-items-center justify-content-center"><span class="button-content">Csv</span></button>
+          <button type="button" (click)="export('excel')" class="btn button d-flex align-items-center justify-content-center"><span class="button-content">Excel</span></button>
+        </div> 
+      </div> 
+      <div class="col-5 pr-0" style="height: 5vh;display: flex;justify-content: end;align-items: center;">
+        <div class="d-flex justify-content-end">
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<div *ngIf="flagset" class="dialog_scrim" (click)="falseSet()">
+</div>
+<div *ngIf="flagset1" class="dialog_scrim" (click)="falseSet1()">
+</div>
+
+<div class="modal pl-0" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content p-2">
+      <section> 
+        <div class="justify-content-between align-items-center d-flex">
+          <div>
+            <p class="preview-head my-3">UOM List Preview Page</p>
+          </div>
+          <div>
+            <button class="button close-icon" (click)="close()">
+              <span class="button-content" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div> 
+      </section>
+    </div>
+  </div>
+</div>
+
+<section class="sidebar close" id="sidebar">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="justify-content-between align-items-center d-flex py-2">
+          <div>
+            <p class="add_items">{{primaryId == '' ? 'Add New ' : 'Edit '}}{{title}}</p>
+          </div>
+          <div>
+            <button class="button close-icon" (click)="closeModal()">
+              <span class="button-content" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <form (ngSubmit)="submitToServer()">
+            <div class="form-group" *ngFor="let field of formFields">
+              <div class="py-2" *ngIf="field.type=='text'">
+                <label for="{{field.id}}">{{field.label}}<span class="text-danger" *ngIf="field.required"> *</span> :</label>
+                <input type="{{field.type}}" id="{{field.id}}" placeholder="{{field.placeholder}}" class="form-control"
+                  [(ngModel)]="field.fieldValue" [ngModelOptions]="{standalone: true}"> 
+              </div>
+              <div class="py-2" *ngIf="field.type=='textarea'">
+                <label for="{{field.id}}">{{field.label}}<span class="text-danger" *ngIf="field.required"> *</span> :</label>
+                <textarea id="{{field.id}}" placeholder="{{field.placeholder}}" [ngModelOptions]="{standalone: true}"
+                  class="form-control" [(ngModel)]="field.fieldValue"></textarea> 
+              </div>
+              <div class="py-2" *ngIf="field.type=='binselect'">
+                <label for="{{field.id}}">{{field.label}}<span class="text-danger" *ngIf="field.required"> *</span> :</label>
+                <input type="text" id="{{field.id}}" placeholder="{{field.placeholder}}" class="form-control" 
+                  [(ngModel)]="field.fieldValue" [ngModelOptions]="{standalone: true}"> 
+              </div>
+              <div *ngIf="field.type === 'autocomplete'" class="py-2">
+                <label for="{{field.id}}">{{field.label}}<span class="text-danger" *ngIf="field.required"> *</span> :</label>
+                <input type="{{field.type}}" id="{{field.id}}" class="form-control" [(ngModel)]="field.fieldValue"
+                  placeholder="{{field.placeholder}}" autocomplete="on">
+                <ul *ngIf="itemGroupData.length > 0" class="autocomplete-items">
+                  <li *ngFor="let item of itemGroupData">{{ item }}</li>
+                </ul> 
+              </div>
+              <!-- Error message for required fields -->
+              <div *ngIf="field.required && !field.fieldValue && submittedFlag" class="text-danger">
+                {{ field.label }} is required.
+              </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center pt-4 btns_sidebar">
+              <button type="submit" class="button mr-2">
+                <span class="button-content">Submit</span>
+              </button>
+              <button type="button" class="button" (click)="clearFields()">
+                <span class="button-content">Clear</span>
+              </button>
+            </div>
+          </form>
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
