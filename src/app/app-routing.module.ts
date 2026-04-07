@@ -16,6 +16,7 @@ import { PrebinningStatusComponent } from './prebinning-status/prebinning-status
 import { UserEntryLogComponent } from './user-entry-log/user-entry-log.component';
 import { AuthGuard } from './auth.guard';
 import { BinwisePrebininningActionComponent } from './binwise-prebininning-action/binwise-prebininning-action.component';
+import { GrnPushingComponent } from './grn-pushing/grn-pushing.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,6 +30,7 @@ const routes: Routes = [
         { path: 'userlog', component: UserlogComponent },
         { path: 'inventory_list/:id', component: InventoryListComponent },
         { path: 'operation_binwisePrebinningReject', component: BinwisePrebininningActionComponent},
+        { path: 'grn_pushing', component: GrnPushingComponent },
         { path: 'prebinning_aaproval', component: PrebinningApprovalComponent },
         { path: 'prebinning_status', component: PrebinningStatusComponent },
         { path: 'user-control', component: UserControlComponent },

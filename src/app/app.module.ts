@@ -130,6 +130,7 @@ import { BinwisePrebininningActionComponent } from './binwise-prebininning-actio
 import { StoreRetrieveDashboardComponent } from './store-retrieve-dashboard/store-retrieve-dashboard.component';
 import { OrderReassignComponent } from './order-reassign/order-reassign.component';
 import { StationManagementComponent } from './station-management/station-management.component';
+import { GrnPushingComponent } from './grn-pushing/grn-pushing.component';
 
 
 @NgModule({
@@ -241,7 +242,8 @@ import { StationManagementComponent } from './station-management/station-managem
     BinwisePrebininningActionComponent,
     StoreRetrieveDashboardComponent,
     OrderReassignComponent,
-    StationManagementComponent
+    StationManagementComponent,
+    GrnPushingComponent
 
     // RouterModule
   ],

@@ -492,6 +492,13 @@
                       class="fas fa-check-square mr-1" aria-hidden="true"></i>Pre-Binning Approval</button>
                 </div>
 
+                <div *ngIf="menuRights?.operation_storedetails_list">
+                  <button class="btns_link2 mb-2 operation_menu_btn" (click)="selectTab('grn_pushing')"
+                    (click)="toggleOperationsDropdown()"
+                    [ngClass]="{ 'black-background': selectedTab === 'grn_pushing' }"> <i
+                      class="fas fa-share-square mr-1" aria-hidden="true"></i>GRN Pushing</button>
+                </div>
+
                    
             <!-- Pre Binning Status -->
             <div *ngIf="menuRights?.status_prebinning_list">
@@ -1428,6 +1435,11 @@ style="background-color: whitesmoke;">
                 <button class="btns_link2" (click)="selectTab('operation_binwisePrebinningReject')"
                   [ngClass]="{ 'black-background': selectedTab === 'operation_binwisePrebinningReject' }"> <i
                     class="fas fa-clipboard-check mr-1" aria-hidden="true"></i>Binwise Pre-binning Reject</button>
+              </div>
+              <div *ngIf="menuRights?.operation_storedetails_list && selectedTab === 'grn_pushing'">
+                <button class="btns_link2" (click)="selectTab('grn_pushing')"
+                  [ngClass]="{ 'black-background': selectedTab === 'grn_pushing' }"> <i
+                    class="fas fa-share-square mr-1" aria-hidden="true"></i>GRN Pushing</button>
               </div>
               <div *ngIf="menuRights?.operation_storedetails_list && selectedTab==='pallet_storage'"><button
                   class="btns_link2" (click)="selectTab('pallet_storage')"

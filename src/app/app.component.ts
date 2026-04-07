@@ -58,6 +58,7 @@ export class AppComponent {
       '/login': 'Login',
       '/mainpage/home': 'Home',
       '/mainpage/prebinning_status': 'Prebinning Status',   
+      '/mainpage/grn_pushing': 'GRN Pushing',
       '/mainpage/item': 'Item Master',
       '/mainpage/master/masterBin': 'Bin Master',
       '/mainpage/master/MasterReason': 'Remarks Master', 

@@ -1,0 +1,262 @@
+<section class="gk-section">
+  <div class="container-fluid gk-container">
+    <div class="row gk-container2 m-0">
+      <div class="col-12 px-0">
+        <div class="grn-header">
+          <div>
+            <h3 class="screen-title">GRN Pushing</h3>
+            <p class="screen-subtitle">Pending GRPO binning records and selected document details</p>
+          </div>
+          <button class="refresh-pill" (click)="loadListData()">
+            <i class="fa fa-refresh mr-1" aria-hidden="true"></i> Refresh
+          </button>
+        </div>
+
+        <div class="grn-panel">
+          <div class="tab-strip">
+            <button
+              *ngFor="let tab of tabs"
+              type="button"
+              class="tab-btn"
+              [class.active]="activeTab === tab.key"
+              (click)="setActiveTab(tab.key)"
+            >
+              {{ tab.label }}
+            </button>
+          </div>
+
+          <div class="last-updated">
+            Last Updated On:
+            <span>{{ lastUpdatedDateTime | date: 'dd-MM-yyyy hh:mm:ss a' }}</span>
+          </div>
+
+          <div *ngIf="activeTab === 'Retrieval Status'" class="empty-state">
+            Retrieval Status view is ready in UI, but no API was provided for this tab yet.
+          </div>
+
+          <div *ngIf="activeTab === 'Pending'" class="table-container" [ngStyle]="{ border: '2px solid #dee2e6' }" #tableBody>
+            <table class="table table-bordered table-striped mb-2">
+              <thead class="fixed-header">
+                <tr>
+                  <th class="table_head_font col-check">Select</th>
+                  <th class="table_head_font setPointer" (click)="onSort('DocEntry', 'number')">
+                    Doc Entry
+                    <i *ngIf="listSortKey === 'DocEntry' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'DocEntry' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'DocEntry'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('DocNum', 'text')">
+                    Doc Num
+                    <i *ngIf="listSortKey === 'DocNum' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'DocNum' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'DocNum'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('DocType', 'text')">
+                    Doc Type
+                    <i *ngIf="listSortKey === 'DocType' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'DocType' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'DocType'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('PartyName', 'text')">
+                    Party Name
+                    <i *ngIf="listSortKey === 'PartyName' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'PartyName' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'PartyName'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('DocDate', 'date')">
+                    Doc Date
+                    <i *ngIf="listSortKey === 'DocDate' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'DocDate' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'DocDate'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('ReqDate', 'date')">
+                    Req Date
+                    <i *ngIf="listSortKey === 'ReqDate' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'ReqDate' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'ReqDate'" class="fas fa-sort"></i>
+                  </th>
+                  <th class="table_head_font setPointer" (click)="onSort('OrderNo', 'number')">
+                    Order No
+                    <i *ngIf="listSortKey === 'OrderNo' && isListAscending" class="fas fa-arrow-up"></i>
+                    <i *ngIf="listSortKey === 'OrderNo' && !isListAscending" class="fas fa-arrow-down"></i>
+                    <i *ngIf="listSortKey !== 'OrderNo'" class="fas fa-sort"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="listData.length > 0 || filters">
+                  <td></td>
+                  <td class="p-0">
+                    <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="filters['DocEntry']" (input)="applyFilters()">
+                  </td>
+                  <td class="p-0">
+                    <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="filters['DocNum']" (input)="applyFilters()">
+                  </td>
+                  <td class="p-0">
+                    <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="filters['DocType']" (input)="applyFilters()">
+                  </td>
+                  <td class="p-0">
+                    <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="filters['PartyName']" (input)="applyFilters()">
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td class="p-0">
+                    <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="filters['OrderNo']" (input)="applyFilters()">
+                  </td>
+                </tr>
+
+                <tr
+                  *ngFor="let item of filteredData | paginate: { itemsPerPage: itemsPerPage, currentPage: p }"
+                  [class.selected-row]="item.selected"
+                  (click)="onRowSelect(item)"
+                >
+                  <td class="table_data_font text-center">
+                    <input type="checkbox" [checked]="item.selected" (click)="$event.stopPropagation()" (change)="onRowSelect(item)">
+                  </td>
+                  <td class="table_data_font">{{ getListValue(item, ['DocEntry', 'docEntry']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['DocNum', 'docNum']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['DocType', 'docType', 'Process']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['PartyName', 'partyName', 'CardName']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['DocDate', 'docDate']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['ReqDate', 'reqDate']) }}</td>
+                  <td class="table_data_font">{{ getListValue(item, ['OrderNo', 'orderNo', 'Order']) }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="no-records-message" *ngIf="filteredData.length === 0">
+              <div>
+                <p>No Records Found</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="activeTab === 'Pending'" class="footer-bar">
+            <div class="total_records">Records : {{ filteredData.length }}</div>
+            <div class="action-group">
+              <button class="button green-btn" (click)="submitRequest()">
+                <span class="button-content">Request</span>
+              </button>
+              <button class="button blue-btn" (click)="openOrderDetails()">
+                <span class="button-content">Order Details</span>
+              </button>
+            </div>
+            <div class="pagination-wrap">
+              <pagination-controls class="p-0" [maxSize]="5" (pageChange)="p = $event"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop-custom" *ngIf="showDetailModal">
+  <div class="details-modal">
+    <div class="details-header">
+      <h3>Order Details</h3>
+      <button type="button" class="close-btn" (click)="closeOrderDetails()">&times;</button>
+    </div>
+
+    <div class="details-body">
+      <div class="table-container modal-table">
+        <table class="table table-bordered table-striped mb-2">
+          <thead class="fixed-header">
+            <tr>
+              <th class="table_head_font col-check">Select</th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('OrderNo', 'text')">
+                Order No
+                <i *ngIf="detailSortKey === 'OrderNo' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'OrderNo' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'OrderNo'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('DocType', 'text')">
+                Doc Type
+                <i *ngIf="detailSortKey === 'DocType' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'DocType' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'DocType'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('ItemCode', 'text')">
+                Item Code
+                <i *ngIf="detailSortKey === 'ItemCode' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'ItemCode' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'ItemCode'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('ItemName', 'text')">
+                Item Name
+                <i *ngIf="detailSortKey === 'ItemName' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'ItemName' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'ItemName'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('Quantity', 'number')">
+                Quantity
+                <i *ngIf="detailSortKey === 'Quantity' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'Quantity' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'Quantity'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('RequestQty', 'number')">
+                Request Qty
+                <i *ngIf="detailSortKey === 'RequestQty' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'RequestQty' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'RequestQty'" class="fas fa-sort"></i>
+              </th>
+              <th class="table_head_font setPointer" (click)="onDetailSort('Binned', 'number')">
+                Binned
+                <i *ngIf="detailSortKey === 'Binned' && isDetailAscending" class="fas fa-arrow-up"></i>
+                <i *ngIf="detailSortKey === 'Binned' && !isDetailAscending" class="fas fa-arrow-down"></i>
+                <i *ngIf="detailSortKey !== 'Binned'" class="fas fa-sort"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="detailData.length > 0 || detailFilters">
+              <td></td>
+              <td class="p-0">
+                <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="detailFilters['OrderNo']" (input)="applyDetailFilters()">
+              </td>
+              <td class="p-0">
+                <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="detailFilters['DocType']" (input)="applyDetailFilters()">
+              </td>
+              <td class="p-0">
+                <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="detailFilters['ItemCode']" (input)="applyDetailFilters()">
+              </td>
+              <td class="p-0">
+                <input type="search" class="filter-input w-100" placeholder="search" [(ngModel)]="detailFilters['ItemName']" (input)="applyDetailFilters()">
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr *ngFor="let item of filteredDetailData | paginate: { itemsPerPage: detailItemsPerPage, currentPage: detailPage }" class="selected-row">
+              <td class="table_data_font text-center">
+                <input type="checkbox" checked>
+              </td>
+              <td class="table_data_font">{{ getListValue(item, ['OrderNo', 'orderNo', 'DocNum']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['DocType', 'docType', 'Process']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['ItemCode', 'itemCode']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['ItemName', 'itemName']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['Quantity', 'Qty', 'quantity']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['RequestQty', 'ReqQty', 'requestQty']) }}</td>
+              <td class="table_data_font">{{ getListValue(item, ['Binned', 'binnedQty', 'BinnedQty'], '0') }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="no-records-message" *ngIf="filteredDetailData.length === 0">
+          <div>
+            <p>No Records Found</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-footer">
+      <div></div>
+      <pagination-controls class="p-0" [maxSize]="5" (pageChange)="detailPage = $event"></pagination-controls>
+      <button class="button blue-btn" (click)="closeOrderDetails()">
+        <span class="button-content">Ok</span>
+      </button>
+    </div>
+  </div>
+</div>

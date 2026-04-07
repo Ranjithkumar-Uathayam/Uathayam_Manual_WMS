@@ -712,15 +712,30 @@ export class ApiService {
       );
     }
 
-    getPreBinningDataForRejection(data: any)
-    {
+  getPreBinningDataForRejection(data: any)
+  {
         return this.http.post(this.baseURL + 'operation/binWisePreBinningReject', data, {headers: this.option})
-    }
+  }
  
-    rejectPreBinningData(data: any)
-    {
+  rejectPreBinningData(data: any)
+  {
         return this.http.post(this.baseURL + 'operation/rejectPreBinning', data, {headers: this.option})
-    }
+  }
+
+  getGrnPushingList(data: any)
+  {
+      return this.http.post(this.baseURL + 'operation/grnPushing/list', data, {headers: this.option})
+  }
+
+  getGrnPushingDetails(data: any)
+  {
+      return this.http.post(this.baseURL + 'operation/grnPushing/details', data, {headers: this.option})
+  }
+
+  submitGrnPushingRequest(data: any)
+  {
+      return this.http.post(this.baseURL + 'operation/grnPushing/request', data, {headers: this.option})
+  }
 
     // data cancel
     semiAutoCommand(data: any) {
