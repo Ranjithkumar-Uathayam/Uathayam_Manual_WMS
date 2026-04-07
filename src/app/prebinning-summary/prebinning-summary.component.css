@@ -515,7 +515,7 @@ input {
 }
 
 
-:host /deep/ .select2{
+:host ::ng-deep .select2{
     width: calc(100% - 0px) !important;
 }
 

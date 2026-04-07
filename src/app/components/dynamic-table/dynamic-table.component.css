@@ -223,7 +223,7 @@ td {
         height: auto !important;
     }
  
-    :host /deep/ .ngx-pagination {
+    :host ::ng-deep .ngx-pagination {
         padding-left: 0px !important;
         font-size: 1rem !important;
         padding: 0px !important;

@@ -247,8 +247,15 @@ export class MainpageComponent implements OnInit {
     let currentPage: any = localStorage.getItem('WMS-ActivePage');
     if (currentPage) {
       currentPage = JSON.parse(currentPage);
-      this.mySelectedTab = currentPage.menu;
-      this.selectedTab = currentPage.submenu;
+      const hiddenMenus = ['Status', 'Equipment'];
+      if (hiddenMenus.includes(currentPage.menu)) {
+        this.mySelectedTab = 'Operations';
+        this.selectedTab = 'grn_pushing';
+        localStorage.setItem('WMS-ActivePage', JSON.stringify({ menu: 'Operations', submenu: 'grn_pushing' }));
+      } else {
+        this.mySelectedTab = currentPage.menu;
+        this.selectedTab = currentPage.submenu;
+      }
     }
 
     // Additional check for the URL to set the tab and submenu
@@ -365,10 +372,6 @@ export class MainpageComponent implements OnInit {
     if (this.router.url.includes('mainpage/location_status')) {
       this.mySelectedTab = 'Inventory';
       this.selectedTab = 'location_status';
-    }
-    if (this.router.url.includes('mainpage/equipment_status')) {
-      this.mySelectedTab = 'Equipment';
-      this.selectedTab = 'equipment_status';
     }
     if (this.router.url.includes('mainpage/prebinning_status')) {
       this.mySelectedTab = 'Operations';
@@ -1759,6 +1762,39 @@ export class MainpageComponent implements OnInit {
     }
 
   } // Toggle Status Dropdown
+
+  closeAllMenus(): void {
+    this.isOperationsTabActive = false;
+    this.isStatusTabActive = false;
+    this.isReportsTabActive = false;
+    this.isEquipmentTabActive = false;
+  }
+
+  activateMenu(menu: string): void {
+    this.closeAllMenus();
+    this.mySelectedTab = menu;
+  }
+
+  openReportsMenu(): void {
+    this.mySelectedTab = 'Transactions';
+    this.isOperationsTabActive = false;
+    this.isStatusTabActive = false;
+    this.isEquipmentTabActive = false;
+    this.isReportsTabActive = !this.isReportsTabActive;
+  }
+
+  openOperationsMenu(): void {
+    this.mySelectedTab = 'Operations';
+    this.isReportsTabActive = false;
+    this.isStatusTabActive = false;
+    this.isEquipmentTabActive = false;
+    this.isOperationsTabActive = !this.isOperationsTabActive;
+  }
+
+  navigateAndClose(tab: string): void {
+    this.closeAllMenus();
+    this.selectTab(tab);
+  }
 
   onClickOutside(event: MouseEvent) {
     if (!this.eRef.nativeElement.contains(event.target)) {

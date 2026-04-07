@@ -724,12 +724,12 @@ export class ApiService {
 
   getGrnPushingList(data: any)
   {
-      return this.http.post(this.baseURL + 'operation/grnPushing/list', data, {headers: this.option})
+      return this.http.post(this.baseURL + 'ERP/getGRNPushingList', data, {headers: this.option})
   }
 
   getGrnPushingDetails(data: any)
   {
-      return this.http.post(this.baseURL + 'operation/grnPushing/details', data, {headers: this.option})
+      return this.http.post(this.baseURL + 'ERP/getGRNPushingDetails', data, {headers: this.option})
   }
 
   submitGrnPushingRequest(data: any)

@@ -9,6 +9,15 @@ interface GrnPushingTab {
   label: string;
 }
 
+interface GrnTableColumn {
+  label: string;
+  sortKey: string;
+  sortType: string;
+  keys: string[];
+  searchable?: boolean;
+  fallback?: string;
+}
+
 @Component({
   selector: 'app-grn-pushing',
   templateUrl: './grn-pushing.component.html',
@@ -18,7 +27,7 @@ export class GrnPushingComponent implements OnInit {
   @ViewChild('tableBody') tableBody!: ElementRef;
 
   tabs: GrnPushingTab[] = [
-    { key: 'Pending', label: 'Pending' },
+    { key: 'Pending', label: 'Pending Queue' },
     { key: 'Retrieval Status', label: 'Retrieval Status' }
   ];
 
@@ -39,11 +48,30 @@ export class GrnPushingComponent implements OnInit {
 
   selectedRow: any = null;
   showDetailModal = false;
+  isLoading = false;
+  isDetailLoading = false;
+  loadError = '';
+  detailError = '';
 
   listSortKey = '';
   detailSortKey = '';
   isListAscending = true;
   isDetailAscending = true;
+
+  readonly grnColumns: GrnTableColumn[] = [
+    { label: 'Doc Date', sortKey: 'DocDate', sortType: 'text', keys: ['DocDate', 'docDate'] },
+    { label: 'Doc Entry', sortKey: 'DocEntry', sortType: 'number', keys: ['DocEntry', 'docEntry'], searchable: true },
+    { label: 'Doc Num', sortKey: 'DocNum', sortType: 'text', keys: ['DocNum', 'docNum'], searchable: true },
+    { label: 'Type', sortKey: 'Type', sortType: 'text', keys: ['Type', 'type', 'DocType', 'docType', 'Process'], searchable: true },
+    { label: 'Party Name', sortKey: 'PartyName', sortType: 'text', keys: ['PartyName', 'partyName', 'CardName'] },    
+    { label: 'Quantity', sortKey: 'Quantity', sortType: 'number', keys: ['Quantity', 'quantity', 'Qty'] },
+    { label: 'Binned', sortKey: 'Binned', sortType: 'number', keys: ['Binned', 'binned', 'BinnedQty'], fallback: '0' },
+    { label: 'Id', sortKey: 'Id', sortType: 'number', keys: ['Id', 'id'] },
+    { label: 'Req Date', sortKey: 'ReqDate', sortType: 'text', keys: ['ReqDate', 'reqDate'] },
+    { label: 'Requested', sortKey: 'Requested', sortType: 'number', keys: ['Requested', 'requested', 'RequestQty', 'ReqQty'] },
+    { label: 'Floor', sortKey: 'Floor', sortType: 'text', keys: ['Floor', 'floor'] },
+    { label: 'Station', sortKey: 'Station', sortType: 'text', keys: ['Station', 'station'] }
+  ];
 
   constructor(
     private apiservice: ApiService,
@@ -79,6 +107,7 @@ export class GrnPushingComponent implements OnInit {
     this.selectedRow = null;
     this.listData = [];
     this.filteredData = [];
+    this.loadError = '';
 
     if (tab === 'Pending') {
       this.loadListData();
@@ -91,6 +120,9 @@ export class GrnPushingComponent implements OnInit {
     }
 
     this.lastUpdatedDateTime = new Date().toLocaleString();
+    this.isLoading = true;
+    this.loadError = '';
+
     const requestBody = {
       type: 'Binning'
     };
@@ -99,9 +131,10 @@ export class GrnPushingComponent implements OnInit {
     this.apiservice.getGrnPushingList(requestBody).subscribe(
       (res: any) => {
         this.appComponent.hideLoading();
+        this.isLoading = false;
 
-        if (res?.status === 1 || Array.isArray(res?.data) || Array.isArray(res)) {
-          const rawData = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+        const rawData = this.normalizeCollectionResponse(res);
+        if (rawData.length > 0 || res?.status === 1) {
           this.listData = rawData.map((item: any, index: number) => ({
             ...item,
             sno: index + 1,
@@ -114,13 +147,14 @@ export class GrnPushingComponent implements OnInit {
 
         this.listData = [];
         this.filteredData = [];
-        this.swal.error('Error', res?.message || 'Unable to load GRN Pushing data.');
+        this.loadError = this.getErrorMessage(res, 'No GRN pushing records were returned by the backend.');
       },
       (error) => {
         this.appComponent.hideLoading();
+        this.isLoading = false;
         this.listData = [];
         this.filteredData = [];
-        this.swal.error('Error', error?.message || 'Unable to load GRN Pushing data.');
+        this.loadError = this.getErrorMessage(error, 'Unable to load GRN pushing data.');
       }
     );
   }
@@ -140,7 +174,7 @@ export class GrnPushingComponent implements OnInit {
         })
       );
       this.p = 1;
-    }, 300);
+    }, 250);
   }
 
   applyDetailFilters() {
@@ -180,18 +214,21 @@ export class GrnPushingComponent implements OnInit {
 
     const requestBody = {
       type: 'Binning',
-      process: this.selectedRow.DocType || this.selectedRow.docType || this.selectedRow.Process || 'GRPO',
+      process: this.selectedRow.Type || this.selectedRow.type || this.selectedRow.DocType || this.selectedRow.docType || this.selectedRow.Process || 'GRPO',
       status: this.selectedRow.Status || this.selectedRow.status || 'Pending',
       docEntry: this.selectedRow.DocEntry || this.selectedRow.docEntry
     };
 
+    this.detailError = '';
+    this.isDetailLoading = true;
     this.appComponent.showLoading('Order Details Loading...');
     this.apiservice.getGrnPushingDetails(requestBody).subscribe(
       (res: any) => {
         this.appComponent.hideLoading();
+        this.isDetailLoading = false;
 
-        if (res?.status === 1 || Array.isArray(res?.data) || Array.isArray(res)) {
-          const rawData = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+        const rawData = this.normalizeCollectionResponse(res);
+        if (rawData.length > 0 || res?.status === 1) {
           this.detailData = rawData.map((item: any, index: number) => ({
             ...item,
             sno: index + 1,
@@ -205,13 +242,16 @@ export class GrnPushingComponent implements OnInit {
 
         this.detailData = [];
         this.filteredDetailData = [];
-        this.swal.error('Error', res?.message || 'Unable to load order details.');
+        this.detailError = this.getErrorMessage(res, 'No order details were returned by the backend.');
+        this.showDetailModal = true;
       },
       (error) => {
         this.appComponent.hideLoading();
+        this.isDetailLoading = false;
         this.detailData = [];
         this.filteredDetailData = [];
-        this.swal.error('Error', error?.message || 'Unable to load order details.');
+        this.detailError = this.getErrorMessage(error, 'Unable to load order details.');
+        this.showDetailModal = true;
       }
     );
   }
@@ -234,16 +274,17 @@ export class GrnPushingComponent implements OnInit {
       type: 'Binning',
       docEntry: this.selectedRow.DocEntry || this.selectedRow.docEntry,
       docNum: this.selectedRow.DocNum || this.selectedRow.docNum,
-      process: this.selectedRow.DocType || this.selectedRow.docType || 'GRPO'
+      process: this.selectedRow.Type || this.selectedRow.type || this.selectedRow.DocType || this.selectedRow.docType || 'GRPO'
     };
 
     Swal.fire({
-      title: 'Are you sure to push the selected GRN?',
+      title: 'Push selected GRN?',
+      text: 'This will create the GRN pushing request for the selected document.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#0f766e',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
+      confirmButtonText: 'Yes, continue'
     }).then((result) => {
       if (!result.isConfirmed) {
         return;
@@ -257,7 +298,7 @@ export class GrnPushingComponent implements OnInit {
           if (res?.status === 1) {
             Swal.fire({
               title: 'Success',
-              text: res?.message || 'GRN Pushing request submitted successfully.',
+              text: res?.message || 'GRN pushing request submitted successfully.',
               icon: 'success',
               showConfirmButton: false,
               timer: 1200,
@@ -268,11 +309,11 @@ export class GrnPushingComponent implements OnInit {
             return;
           }
 
-          this.swal.error('Error', res?.message || 'Unable to submit GRN Pushing request.');
+          this.swal.error('Error', this.getErrorMessage(res, 'Unable to submit the GRN pushing request.'));
         },
         (error) => {
           this.appComponent.hideLoading();
-          this.swal.error('Error', error?.message || 'Unable to submit GRN Pushing request.');
+          this.swal.error('Error', this.getErrorMessage(error, 'Unable to submit the GRN pushing request.'));
         }
       );
     });
@@ -332,5 +373,45 @@ export class GrnPushingComponent implements OnInit {
     }
 
     return fallback;
+  }
+
+  get pendingCount(): number {
+    return this.filteredData.length;
+  }
+
+  getFilterValue(key: string): string {
+    return this.filters[key] || '';
+  }
+
+  get selectedDocLabel(): string {
+    if (!this.selectedRow) {
+      return 'No document selected';
+    }
+
+    return `${this.getListValue(this.selectedRow, ['DocNum', 'docNum'])} / ${this.getListValue(this.selectedRow, ['PartyName', 'partyName', 'CardName'])}`;
+  }
+
+  private normalizeCollectionResponse(res: any): any[] {
+    const candidates = [
+      res?.data,
+      res?.rows,
+      res?.result,
+      res?.result?.data,
+      res?.result?.rows,
+      res?.response?.data,
+      res
+    ];
+
+    for (const candidate of candidates) {
+      if (Array.isArray(candidate)) {
+        return candidate;
+      }
+    }
+
+    return [];
+  }
+
+  private getErrorMessage(source: any, fallback: string): string {
+    return source?.error?.message || source?.message || source?.error?.error || fallback;
   }
 }

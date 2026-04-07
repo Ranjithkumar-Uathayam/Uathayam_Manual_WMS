@@ -314,12 +314,9 @@ button.close:hover {
   display: block;
 }
 
-.status_table tbody {
-  td {
-    float: left;
-    color: #ff0000;
-
-  }
+.status_table tbody td {
+  float: left;
+  color: #ff0000;
 }
 
 /* .status_table.table-striped tbody tr:nth-of-type(odd) {
@@ -332,18 +329,16 @@ button.close:hover {
 
 .status_table thead {
   text-align: left;
+}
 
-  tr {
-    th {
-      float: left;
-      background-color: #32688927 !important;
-      text-align: left;
-    }
+.status_table thead tr th {
+  float: left;
+  background-color: #32688927 !important;
+  text-align: left;
+}
 
-    td {
-      color: #ff0000;
-    }
-  }
+.status_table thead tr td {
+  color: #ff0000;
 }
 
 .feed_column_1 {
@@ -1153,20 +1148,20 @@ input:checked+.slider:before {
   justify-content: center !important;
 }
 
-:host /deep/ .ngx-pagination {
+:host ::ng-deep .ngx-pagination {
   padding-left: 0px !important;
   font-size: 1rem !important;
 }
 
-:host /deep/ .ngx-pagination .current,
-:host /deep/ .btn-info {
+:host ::ng-deep .ngx-pagination .current,
+:host ::ng-deep .btn-info {
   background: #17a2b8 !important;
   border: transparent !important;
   border-radius: 6px !important;
   font-size: 1rem !important;
 }
 
-:host /deep/ .ngx-pagination .current:hover {
+:host ::ng-deep .ngx-pagination .current:hover {
   background: #17a2b8 !important;
   border-radius: 6px !important;
   border: transparent !important;
@@ -1303,8 +1298,8 @@ input:checked+.slider:before {
   color: #018DB0;
   font-weight: 500;
   display: flex;
-  justify-content: end;
-  align-items: end;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .icons_parent {
@@ -1345,7 +1340,7 @@ input:checked+.slider:before {
   width: 35px;
   height: 35px;
   justify-content: center;
-  align-items: start !important;
+  align-items: flex-start !important;
   text-align: center;
   display: flex;
   border-radius: 5px;
@@ -1794,3 +1789,4 @@ div:where(.swal2-container) .swal2-html-container {
     font-weight: 800 !important;
     color: rgb(237, 211, 181)
 }
+

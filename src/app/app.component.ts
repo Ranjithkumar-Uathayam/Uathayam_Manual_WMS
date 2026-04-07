@@ -75,7 +75,6 @@ export class AppComponent {
       '/mainpage/alarm_history': 'Alarm History',
       '/mainpage/storage_retrieval_history': 'Storage Retrieval History', 
       '/mainpage/pallet_relocation': 'Bin Relocation', 
-      '/mainpage/equipment_status': 'Equipment Status', 
       '/mainpage/emergency_operations': 'Emergency Operations',
       '/mainpage/location_maintenance': 'Location Maintenance',
       '/mainpage/user_management': 'User Management', 
@@ -94,9 +93,6 @@ export class AppComponent {
       '/mainpage/live_tracking': 'Live Tracking', 
       '/mainpage/binWiseOrder_Summary': 'Order Wise Bin Summary',
       '/mainpage/picking': 'Picking',
-      '/mainpage/station_config': 'Station Config',
-      '/mainpage/wcs_alarm': 'WCS Alarm',
-      '/mainpage/autoPalletRead': 'Auto Pallet Read',
       // 'mainpage/hht_device_rights': 'HHT Device Rights'
   };
   

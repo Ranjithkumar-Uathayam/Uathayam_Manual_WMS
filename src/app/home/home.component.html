@@ -26,12 +26,11 @@
               <div *ngIf="chartLoading" class="d-flex justify-content-center align-items-center">
                 <p class="no-data p-2 m-5 text-center">No Data Available</p>
               </div>
-              <div *ngIf="!chartLoading" class="d-flex justify-content-center align-items-center" id="OrderChart">
-                <apx-chart [series]="chartOptionsBar.series"
-                           [chart]="chartOptionsBar.chart"
-                           [xaxis]="chartOptionsBar.xaxis"
-                           [yaxis]="chartOptionsBar.yaxis"
-                           [responsive]="chartOptionsBar.responsive"></apx-chart>
+              <div *ngIf="!chartLoading" class="chart-fallback p-3">
+                <div *ngFor="let item of chartOptionsBar.series?.[0]?.data; let i = index" class="fallback-row">
+                  <span>{{ chartOptionsBar.xaxis?.categories?.[i] || ('Item ' + (i + 1)) }}</span>
+                  <strong>{{ item }}</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -44,12 +43,11 @@
               <div *ngIf="chartLoading" class="d-flex justify-content-center align-items-center">
                 <p class="no-data p-2 m-5 text-center">No Data Available</p>
               </div>
-              <div *ngIf="!chartLoading" class="d-flex justify-content-center align-items-center" id="OrderChart">
-                <apx-chart [series]="chartOptionsBarItem.series"
-                           [chart]="chartOptionsBarItem.chart"
-                           [xaxis]="chartOptionsBarItem.xaxis"
-                           [yaxis]="chartOptionsBarItem.yaxis"
-                           [responsive]="chartOptionsBarItem.responsive"></apx-chart>
+              <div *ngIf="!chartLoading" class="chart-fallback p-3">
+                <div *ngFor="let item of chartOptionsBarItem.series?.[0]?.data; let i = index" class="fallback-row">
+                  <span>{{ chartOptionsBarItem.xaxis?.categories?.[i] || ('Item ' + (i + 1)) }}</span>
+                  <strong>{{ item }}</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -72,9 +70,11 @@
               <div *ngIf="chartLoading" class="d-flex justify-content-center align-items-center">
                 <p class="no-data p-2 m-5 text-center">No Data Available</p>
               </div>
-              <div *ngIf="!chartLoading" class="d-flex justify-content-center align-items-center" id="pieChart">
-                <apx-chart [series]="chartOptionsPie.series" [chart]="chartOptionsPie.chart"
-                  [labels]="chartOptionsPie.labels" [responsive]="chartOptionsPie.responsive"></apx-chart>
+              <div *ngIf="!chartLoading" class="chart-fallback p-3">
+                <div *ngFor="let label of chartOptionsPie.labels; let i = index" class="fallback-row">
+                  <span>{{ label }}</span>
+                  <strong>{{ chartOptionsPie.series?.[i] || 0 }}</strong>
+                </div>
               </div>
             </div>
       </div>
@@ -86,9 +86,11 @@
               <div *ngIf="chartLoading" class="d-flex justify-content-center align-items-center"> 
                 <p class="no-data p-2 m-5 text-center">No Data Available</p>
               </div>
-              <div *ngIf="!chartLoading" class="d-flex justify-content-center align-items-center" id="BayChart">
-                <apx-chart [series]="chartOptionsPie1.series" [chart]="chartOptionsPie1.chart"
-                  [labels]="chartOptionsPie1.labels" [responsive]="chartOptionsPie1.responsive"></apx-chart>
+              <div *ngIf="!chartLoading" class="chart-fallback p-3">
+                <div *ngFor="let label of chartOptionsPie1.labels; let i = index" class="fallback-row">
+                  <span>{{ label }}</span>
+                  <strong>{{ chartOptionsPie1.series?.[i] || 0 }}</strong>
+                </div>
               </div>
             </div>
           </div>

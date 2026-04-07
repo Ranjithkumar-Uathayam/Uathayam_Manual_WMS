@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ApexOptions, ChartType } from 'ng-apexcharts';
 import { ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
 import { DataService } from '../service/data.service'; 
@@ -17,11 +16,11 @@ export class HomeComponent implements OnInit {
     locationChartData: any = [];
     chartLoading: boolean = true;
 
-    chartOptionsPie: ApexOptions = {
+    chartOptionsPie: any = {
         series: [0, 0, 0, 0],
         chart: {
             width: 400,
-            type: 'pie' as ChartType,
+            type: 'pie',
         },
         labels: ["Occupied", "Free", "Error With Pallet", "Error Without Pallet"],
         responsive: [
@@ -51,11 +50,11 @@ export class HomeComponent implements OnInit {
         ]
     };
 
-    chartOptionsPie1: ApexOptions = {
+    chartOptionsPie1: any = {
         series: [0, 0, 0],
         chart: {
             width: 400,
-            type: 'pie' as ChartType,
+            type: 'pie',
         },
         labels: ["Fully Occupied", "Partially Occupied", "Free"],
         responsive: [
@@ -73,7 +72,7 @@ export class HomeComponent implements OnInit {
         ]
     };
 
-    chartOptionsBar: ApexOptions ={
+    chartOptionsBar: any ={
         chart: {
           type: 'bar',
           height: 350
@@ -108,7 +107,7 @@ export class HomeComponent implements OnInit {
         }]
     };
 
-    chartOptionsBarItem: ApexOptions ={
+    chartOptionsBarItem: any ={
         chart: {
           type: 'bar',
           height: 350

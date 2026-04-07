@@ -84,20 +84,20 @@
   font-size: 1rem;
 }
 
-:host /deep/ .ngx-pagination {
+:host ::ng-deep .ngx-pagination {
   padding-left: 0px;
   font-size: 1rem;
 }
 
-:host /deep/ .ngx-pagination .current,
-:host /deep/ .btn-info {
+:host ::ng-deep .ngx-pagination .current,
+:host ::ng-deep .btn-info {
   background: #17a2b8 !important;
   border: transparent;
   border-radius: 6px;
   font-size: 1rem;
 }
 
-:host /deep/ .ngx-pagination .current:hover {
+:host ::ng-deep .ngx-pagination .current:hover {
   background: #17a2b8 !important;
   border-radius: 6px;
   border: transparent;

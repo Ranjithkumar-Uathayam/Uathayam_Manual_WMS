@@ -9,10 +9,7 @@ import { SwalService } from 'src/app/service/swal.service';
 import { AppComponent } from 'src/app/app.component';
 import { environment } from 'src/environments/environment';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { DownloadFormatterComponent } from 'src/app/download-formatter/download-formatter.component';
 import * as moment from 'moment';
-import { ItemtransactionListComponent } from 'src/app/itemtransaction-list/itemtransaction-list.component';
-import { StorageRetrievalHistoryComponent } from 'src/app/storage-retrieval-history/storage-retrieval-history.component';
 
 @Component({
   selector: 'app-dynamic-table',
@@ -53,17 +50,21 @@ export class DynamicTableComponent {
   searchApiCall: any = '';
   debounceTimer: any;
   invObj: any;
+  itemTransactionFilterCall: any = {};
+  storageHistorySearchCall: any = {};
+  storageHistoryLoadUnloadList: any[] = [];
+  storageHistoryCraneIDArray: any[] = [];
+  storageHistoryShuttleIDArray: any[] = [];
 
   toggleExpand(item: any): void {
     if (!item.ItemName) return;
     this.expandedRows[item.ItemName] = !this.expandedRows[item.ItemName];
   }
-  constructor(private modalService: NgbModal, private apiservice: ApiService, private swal: SwalService, private appComponent: AppComponent, private breakpointObserver: BreakpointObserver, private ItemtransactionListComponent: ItemtransactionListComponent, private StorageRetrievalHistoryComponent: StorageRetrievalHistoryComponent) {
+  constructor(private modalService: NgbModal, private apiservice: ApiService, private swal: SwalService, private appComponent: AppComponent, private breakpointObserver: BreakpointObserver) {
     this.expandedRows = {};
   }
  
   offlineDownload: any = false;
-  @ViewChild(DownloadFormatterComponent) DownloadFormatterComponent!: DownloadFormatterComponent;
  
   ngOnInit() {
  
@@ -215,7 +216,7 @@ export class DynamicTableComponent {
                     return value != null && value !== undefined && value.trim() !== '';
                 })
             
-                let obj = this.ItemtransactionListComponent.filterCall
+                let obj = { ...this.itemTransactionFilterCall }
                 obj['PartGrp'] = filterValue.includes('ItemGroup') ? this.filters['ItemGroup'] : ''
                 obj['BinID'] = filterValue.includes('BinID') ? this.filters['BinID'] : ''
 
@@ -273,22 +274,22 @@ export class DynamicTableComponent {
                     return value != null && value !== undefined && value.trim() !== '';
                 })
             
-                let obj = this.StorageRetrievalHistoryComponent.searchApiCall
+                let obj = { ...this.storageHistorySearchCall }
                 obj['BinID'] = filterValue.includes('BinID') ? this.filters['BinID'] : ''
 
                 this.searchApiCall = `history/loadUnLoad`;
                 this.appComponent.showLoading('Item Transaction Data Loading...');
                 this.apiservice.getAlarmHistoryData(this.searchApiCall, obj).subscribe((res: any) => {
                     if (res.status == 1) {
-                        this.StorageRetrievalHistoryComponent.loadUnloadList = res.data;
-                        this.tableData = this.StorageRetrievalHistoryComponent.loadUnloadList
+                        this.storageHistoryLoadUnloadList = res.data;
+                        this.tableData = this.storageHistoryLoadUnloadList
                         this.tableHeader = JSON.parse(res.header);
-                        this.StorageRetrievalHistoryComponent.craneIDArray = ['All', ...Array.from(new Set(this.StorageRetrievalHistoryComponent.loadUnloadList .map(item => item.AisleNo)))];
-                        this.StorageRetrievalHistoryComponent.shuttleIDArray = ['All', ...Array.from(new Set(this.StorageRetrievalHistoryComponent.loadUnloadList .map(item => item.ShuttleID)))];
+                        this.storageHistoryCraneIDArray = ['All', ...Array.from(new Set(this.storageHistoryLoadUnloadList.map(item => item.AisleNo)))];
+                        this.storageHistoryShuttleIDArray = ['All', ...Array.from(new Set(this.storageHistoryLoadUnloadList.map(item => item.ShuttleID)))];
                     
-                        if (this.StorageRetrievalHistoryComponent.loadUnloadList) {
+                        if (this.storageHistoryLoadUnloadList) {
                             let i = 1
-                            this.StorageRetrievalHistoryComponent.loadUnloadList.forEach((element: any) => {
+                            this.storageHistoryLoadUnloadList.forEach((element: any) => {
                                 element.sno = i
                                 i++
                             })
@@ -371,31 +372,7 @@ export class DynamicTableComponent {
 
     if(this.offlineDownload == true)
     {
-        if(data == 'excel'){
-          const dateFields = this.tableHeader
-          .filter(col => col.date)
-          .map(col => col.data);
-      
-          const formattedRecords = this.filteredRecords.map(record => {
-            const newRecord = { ...record };
-            dateFields.forEach(field => {
-              const value = newRecord[field];
-              if (value && typeof value === 'string' && value.includes('T') && value.endsWith('Z')) {
-                newRecord[field] = moment.utc(value).format('DD-MM-YYYY HH:mm:ss');
-              }
-            });
-            return newRecord;
-          });
-          
-        this.DownloadFormatterComponent.receiveArray(formattedRecords, data, this.tableHeader, this.exportTitle);
-        }
-        else if(data == 'pdf'){
-        this.DownloadFormatterComponent.receiveArray(this.filteredRecords, data, this.tableHeader, this.exportTitle);
-        }
-        else if(data == 'csv'){
-        this.DownloadFormatterComponent.receiveArray(this.filteredRecords, data, this.tableHeader, this.exportTitle);
-        }
-    
+        this.swal.error('Export Disabled', 'Offline export formatter is not available in this workspace.');
         return;
     }
      
