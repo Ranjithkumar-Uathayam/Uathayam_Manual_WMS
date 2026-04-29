@@ -63,6 +63,8 @@ export class MainpageComponent implements OnInit {
   lengthOfLevel: number = 0;
   loggedUname: string = '';
   showFilters2: boolean = false;
+  mobileSidebarOpen = false;
+  sidebarCollapsed = false;
 
   tagEmergency: string = '';
   vesrion: string = environment.appVesrion;
@@ -1768,6 +1770,22 @@ export class MainpageComponent implements OnInit {
     this.isStatusTabActive = false;
     this.isReportsTabActive = false;
     this.isEquipmentTabActive = false;
+  }
+
+  toggleMobileSidebar(): void {
+    this.mobileSidebarOpen = !this.mobileSidebarOpen;
+  }
+
+  closeMobileSidebar(): void {
+    this.mobileSidebarOpen = false;
+  }
+
+  toggleSidebar(): void {
+    if (window.innerWidth <= 991) {
+      this.mobileSidebarOpen = !this.mobileSidebarOpen;
+    } else {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+    }
   }
 
   activateMenu(menu: string): void {

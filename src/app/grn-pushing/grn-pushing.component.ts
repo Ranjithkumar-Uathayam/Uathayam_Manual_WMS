@@ -66,11 +66,11 @@ export class GrnPushingComponent implements OnInit {
     { label: 'Party Name', sortKey: 'PartyName', sortType: 'text', keys: ['PartyName', 'partyName', 'CardName'] },    
     { label: 'Quantity', sortKey: 'Quantity', sortType: 'number', keys: ['Quantity', 'quantity', 'Qty'] },
     { label: 'Binned', sortKey: 'Binned', sortType: 'number', keys: ['Binned', 'binned', 'BinnedQty'], fallback: '0' },
+    { label: 'Status', sortKey: 'status', sortType: 'text', keys: ['status', 'status'], searchable: true },
     { label: 'Id', sortKey: 'Id', sortType: 'number', keys: ['Id', 'id'] },
     { label: 'Req Date', sortKey: 'ReqDate', sortType: 'text', keys: ['ReqDate', 'reqDate'] },
     { label: 'Requested', sortKey: 'Requested', sortType: 'number', keys: ['Requested', 'requested', 'RequestQty', 'ReqQty'] },
-    { label: 'Floor', sortKey: 'Floor', sortType: 'text', keys: ['Floor', 'floor'] },
-    { label: 'Station', sortKey: 'Station', sortType: 'text', keys: ['Station', 'station'] }
+    
   ];
 
   constructor(

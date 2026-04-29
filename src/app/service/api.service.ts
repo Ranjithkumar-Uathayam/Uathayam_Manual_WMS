@@ -734,7 +734,7 @@ export class ApiService {
 
   submitGrnPushingRequest(data: any)
   {
-      return this.http.post(this.baseURL + 'operation/grnPushing/request', data, {headers: this.option})
+      return this.http.post(this.baseURL + 'ERP/createGRNPushingTransaction', data, {headers: this.option})
   }
 
     // data cancel
